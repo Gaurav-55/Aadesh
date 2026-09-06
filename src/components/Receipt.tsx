@@ -9,7 +9,7 @@ export function Receipt({ bill, business }: { bill: Bill; business: Business }) 
   return (
     <div className="receipt mx-auto shadow-sm">
       <div className="text-center">
-        <div className="text-[15px] font-bold uppercase leading-tight">{business.name}</div>
+        <div className="text-[18px] font-bold uppercase leading-tight">{business.name}</div>
         {business.address
           ? business.address.split("\n").map((line, i) => <div key={i}>{line}</div>)
           : null}
@@ -83,7 +83,7 @@ export function Receipt({ bill, business }: { bill: Bill; business: Business }) 
 
       <hr className="receipt-divider" />
 
-      <div className="flex justify-between text-[14px] font-bold">
+      <div className="flex justify-between text-[16px] font-bold">
         <span>GRAND TOTAL</span>
         <span>{formatMoney(bill.grandTotalPaise, cur)}</span>
       </div>
