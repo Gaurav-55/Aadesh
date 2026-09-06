@@ -186,7 +186,9 @@ function Pos() {
         ready ? `Next bill ${next.billNumber} · token ${next.tokenNumber}` : "Loading…"
       }
     >
-      <div className="grid gap-6 lg:grid-cols-[180px_1fr_380px]">
+      <div
+        className={`grid gap-6 ${menu.length > 0 ? "lg:grid-cols-[180px_1fr_380px]" : "lg:grid-cols-[1fr_380px]"}`}
+      >
         {menu.length > 0 ? (
           <aside className="no-print lg:sticky lg:top-24 h-fit">
             <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
