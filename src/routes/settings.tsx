@@ -33,8 +33,39 @@ export const Route = createFileRoute("/settings")({
 });
 
 function SettingsPage() {
-  const { ready, business, saveBusiness } = useStore();
+  const { ready, business, saveBusiness, menu, setMenu, bills, setBills } = useStore();
   const [form, setForm] = useState<Business>(business);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  function onBackup() {
+    const blob = new Blob(
+      [JSON.stringify({ version: 1, savedAt: new Date().toISOString(), business, menu, bills }, null, 2)],
+      { type: "application/json" },
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `aadesh-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Backup file saved");
+  }
+
+  async function onRestore(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    try {
+      const data = JSON.parse(await file.text());
+      if (!data || typeof data !== "object" || !data.business) throw new Error("bad file");
+      saveBusiness({ ...business, ...data.business });
+      setMenu(Array.isArray(data.menu) ? data.menu : []);
+      setBills(Array.isArray(data.bills) ? data.bills : []);
+      toast.success("Backup restored");
+    } catch {
+      toast.error("That file could not be read");
+    }
+  }
 
   useEffect(() => {
     if (ready) setForm(business);
