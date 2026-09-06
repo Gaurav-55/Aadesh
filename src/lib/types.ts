@@ -80,5 +80,5 @@ export const defaultBusiness: Business = {
   taxEnabled: false,
   taxComponents: [],
   billNumbering: { prefix: "", next: 1, resetDaily: false, lastResetDate: null },
-  tokenNumbering: { prefix: "", next: 1, resetDaily: true, lastResetDate: null },
+  tokenNumbering: { prefix: "", next: 1, resetDaily: false, lastResetDate: null },
 };

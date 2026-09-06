@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, History, Receipt, Settings, UtensilsCrossed } from "lucide-react";
+import { ArrowRight, History, Receipt, UtensilsCrossed } from "lucide-react";
 
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
@@ -37,26 +37,7 @@ function Home() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Settings className="size-4 text-primary" /> Step 1 · Business settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Name, address, phone, FSSAI, footer text, tax components and bill/token
-              numbering — everything that prints on the receipt.
-            </p>
-            <Button asChild>
-              <Link to="/settings">
-                Open settings <ArrowRight className="size-4" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <UtensilsCrossed className="size-4 text-primary" /> Step 2 · Menu
+              <UtensilsCrossed className="size-4 text-primary" /> Step 1 · Menu
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -74,7 +55,7 @@ function Home() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Receipt className="size-4 text-primary" /> Step 3 · Billing
+              <Receipt className="size-4 text-primary" /> Step 2 · Billing
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -93,7 +74,7 @@ function Home() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <History className="size-4 text-primary" /> Step 4 · Orders history
+              <History className="size-4 text-primary" /> Step 3 · Orders history
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
