@@ -52,10 +52,26 @@ function Pos() {
 
   const cur = business.currencySymbol || "₹";
 
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    menu.forEach((i) => set.add(i.category?.trim() || "Uncategorised"));
+    return [...set].sort((a, b) =>
+      a === "Uncategorised" ? 1 : b === "Uncategorised" ? -1 : a.localeCompare(b),
+    );
+  }, [menu]);
+
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return q ? menu.filter((m) => m.name.toLowerCase().includes(q)) : menu;
-  }, [menu, query]);
+    return menu
+      .filter((m) => (q ? m.name.toLowerCase().includes(q) : true))
+      .filter((m) =>
+        activeCategory === "all"
+          ? true
+          : (m.category?.trim() || "Uncategorised") === activeCategory,
+      );
+  }, [menu, query, activeCategory]);
 
   function add(name: string, unitPricePaise: number) {
     setCart((prev) => {
