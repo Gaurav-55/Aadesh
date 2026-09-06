@@ -18,13 +18,13 @@ import type { Bill, BillLine, BillTaxLine } from "@/lib/types";
 export const Route = createFileRoute("/pos")({
   head: () => ({
     meta: [
-      { title: "Billing — Billo POS" },
+      { title: "Billing — Aadesh POS" },
       {
         name: "description",
         content:
           "Tap items to build a bill, set Dine In or Takeaway, apply a discount and print an 80mm receipt.",
       },
-      { property: "og:title", content: "Billing — Billo POS" },
+      { property: "og:title", content: "Billing — Aadesh POS" },
       {
         property: "og:description",
         content: "Fast café billing with live totals and 80mm thermal receipts.",

@@ -39,6 +39,6 @@ export function exportOrdersToExcel(bills: Bill[], businessName: string) {
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(lines), "Line items");
 
   const stamp = new Date().toISOString().slice(0, 10);
-  const safe = (businessName || "Billo").replace(/[^a-z0-9]+/gi, "-");
+  const safe = (businessName || "Aadesh").replace(/[^a-z0-9]+/gi, "-");
   XLSX.writeFile(wb, `${safe}-orders-${stamp}.xlsx`);
 }

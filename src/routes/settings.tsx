@@ -16,16 +16,16 @@ import type { Business, NumberingConfig } from "@/lib/types";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Business Settings · Billo POS" },
+      { title: "Business Settings · Aadesh POS" },
       {
         name: "description",
         content:
-          "Set up your café details, GST tax components and bill & token numbering for Billo billing.",
+          "Set up your café details, GST tax components and bill & token numbering for Aadesh billing.",
       },
-      { property: "og:title", content: "Business Settings · Billo POS" },
+      { property: "og:title", content: "Business Settings · Aadesh POS" },
       {
         property: "og:description",
-        content: "Configure business details, taxes and numbering for your Billo receipts.",
+        content: "Configure business details, taxes and numbering for your Aadesh receipts.",
       },
     ],
   }),
