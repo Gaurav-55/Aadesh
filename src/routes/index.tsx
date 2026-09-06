@@ -9,13 +9,13 @@ import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Aadesh — Café Billing & Receipts" },
+      { title: "Aadesh — Every Order. In Control." },
       {
         name: "description",
         content:
           "Aadesh is a fast offline billing app for Indian cafés and restaurants: menu, POS, 80mm thermal receipts and order history.",
       },
-      { property: "og:title", content: "Aadesh — Café Billing & Receipts" },
+      { property: "og:title", content: "Aadesh — Every Order. In Control." },
       {
         property: "og:description",
         content: "Fast billing, 80mm thermal receipts and order history for cafés in India.",
