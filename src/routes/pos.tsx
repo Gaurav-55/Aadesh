@@ -186,7 +186,30 @@ function Pos() {
         ready ? `Next bill ${next.billNumber} · token ${next.tokenNumber}` : "Loading…"
       }
     >
-      <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+      <div className="grid gap-6 lg:grid-cols-[180px_1fr_380px]">
+        {menu.length > 0 ? (
+          <aside className="no-print lg:sticky lg:top-24 h-fit">
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Categories
+            </div>
+            <div className="flex flex-wrap gap-2 lg:flex-col lg:gap-1">
+              {["all", ...categories].map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setActiveCategory(c)}
+                  className={`rounded-md px-3 py-2 text-left text-sm font-medium transition-colors ${
+                    activeCategory === c
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground"
+                  }`}
+                >
+                  {c === "all" ? "All items" : c}
+                </button>
+              ))}
+            </div>
+          </aside>
+        ) : null}
         <div>
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
