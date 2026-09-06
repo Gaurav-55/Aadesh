@@ -245,6 +245,35 @@ function SettingsPage() {
           Save settings
         </Button>
       </div>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>Backup &amp; restore</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            All your business details, menu and bills are saved on this computer inside
+            this browser — nothing is sent anywhere. Save a backup file regularly (for
+            example to a pen drive) so you can restore everything if the computer or
+            browser is reset.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Button variant="secondary" onClick={onBackup}>
+              <Download className="size-4" /> Save backup file
+            </Button>
+            <Button variant="outline" onClick={() => fileRef.current?.click()}>
+              <Upload className="size-4" /> Restore from file
+            </Button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="application/json"
+              className="hidden"
+              onChange={onRestore}
+            />
+          </div>
+        </CardContent>
+      </Card>
     </AppShell>
   );
 }
