@@ -37,25 +37,6 @@ function Home() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Settings className="size-4 text-primary" /> Step 1 · Business settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              Name, address, phone, FSSAI, footer text, tax components and bill/token
-              numbering — everything that prints on the receipt.
-            </p>
-            <Button asChild>
-              <Link to="/settings">
-                Open settings <ArrowRight className="size-4" />
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
               <UtensilsCrossed className="size-4 text-primary" /> Step 2 · Menu
             </CardTitle>
           </CardHeader>
