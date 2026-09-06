@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, History, Receipt, Settings, UtensilsCrossed } from "lucide-react";
+import { ArrowRight, History, Receipt, UtensilsCrossed } from "lucide-react";
 
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,7 @@ function Home() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <UtensilsCrossed className="size-4 text-primary" /> Step 2 · Menu
+              <UtensilsCrossed className="size-4 text-primary" /> Step 1 · Menu
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -55,7 +55,7 @@ function Home() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Receipt className="size-4 text-primary" /> Step 3 · Billing
+              <Receipt className="size-4 text-primary" /> Step 2 · Billing
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -74,7 +74,7 @@ function Home() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <History className="size-4 text-primary" /> Step 4 · Orders history
+              <History className="size-4 text-primary" /> Step 3 · Orders history
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
