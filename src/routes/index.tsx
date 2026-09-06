@@ -9,13 +9,13 @@ import { useStore } from "@/lib/store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Billo — Café Billing & Receipts" },
+      { title: "Aadesh — Café Billing & Receipts" },
       {
         name: "description",
         content:
-          "Billo is a fast offline billing app for Indian cafés and restaurants: menu, POS, 80mm thermal receipts and order history.",
+          "Aadesh is a fast offline billing app for Indian cafés and restaurants: menu, POS, 80mm thermal receipts and order history.",
       },
-      { property: "og:title", content: "Billo — Café Billing & Receipts" },
+      { property: "og:title", content: "Aadesh — Café Billing & Receipts" },
       {
         property: "og:description",
         content: "Fast billing, 80mm thermal receipts and order history for cafés in India.",
@@ -30,7 +30,7 @@ function Home() {
 
   return (
     <AppShell
-      title={ready ? business.name : "Billo"}
+      title={ready ? business.name : "Aadesh"}
       description="Set up your business, then build your menu and start billing."
     >
       <div className="grid gap-4 sm:grid-cols-2">

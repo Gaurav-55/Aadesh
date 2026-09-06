@@ -18,13 +18,13 @@ import type { Bill } from "@/lib/types";
 export const Route = createFileRoute("/orders")({
   head: () => ({
     meta: [
-      { title: "Orders History — Billo" },
+      { title: "Orders History — Aadesh" },
       {
         name: "description",
         content:
           "Browse past bills, review saved receipts and reprint any order without creating a new bill.",
       },
-      { property: "og:title", content: "Orders History — Billo" },
+      { property: "og:title", content: "Orders History — Aadesh" },
       {
         property: "og:description",
         content: "Past bills with one-tap reprint of the original saved receipt.",

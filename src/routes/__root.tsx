@@ -79,12 +79,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Billo — Café Billing & Receipts" },
+      { title: "Aadesh — Café Billing & Receipts" },
       {
         name: "description",
         content: "Simple billing and 80mm thermal receipts for Indian cafés and restaurants.",
       },
-      { property: "og:title", content: "Billo — Café Billing & Receipts" },
+      { property: "og:title", content: "Aadesh — Café Billing & Receipts" },
       {
         property: "og:description",
         content: "Simple billing and 80mm thermal receipts for Indian cafés and restaurants.",

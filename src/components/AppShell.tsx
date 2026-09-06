@@ -27,7 +27,7 @@ export function AppShell({
             <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Store className="size-4" />
             </span>
-            <span className="font-display text-xl font-semibold tracking-tight">Billo</span>
+            <span className="font-display text-xl font-semibold tracking-tight">Aadesh</span>
           </Link>
           <nav className="ml-auto flex items-center gap-1">
             {nav.map(({ to, label, icon: Icon }) => (

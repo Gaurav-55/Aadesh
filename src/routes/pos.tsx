@@ -18,13 +18,13 @@ import type { Bill, BillLine, BillTaxLine } from "@/lib/types";
 export const Route = createFileRoute("/pos")({
   head: () => ({
     meta: [
-      { title: "Billing — Billo POS" },
+      { title: "Billing — Aadesh POS" },
       {
         name: "description",
         content:
           "Tap items to build a bill, set Dine In or Takeaway, apply a discount and print an 80mm receipt.",
       },
-      { property: "og:title", content: "Billing — Billo POS" },
+      { property: "og:title", content: "Billing — Aadesh POS" },
       {
         property: "og:description",
         content: "Fast café billing with live totals and 80mm thermal receipts.",
@@ -52,10 +52,26 @@ function Pos() {
 
   const cur = business.currencySymbol || "₹";
 
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    menu.forEach((i) => set.add(i.category?.trim() || "Uncategorised"));
+    return [...set].sort((a, b) =>
+      a === "Uncategorised" ? 1 : b === "Uncategorised" ? -1 : a.localeCompare(b),
+    );
+  }, [menu]);
+
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return q ? menu.filter((m) => m.name.toLowerCase().includes(q)) : menu;
-  }, [menu, query]);
+    return menu
+      .filter((m) => (q ? m.name.toLowerCase().includes(q) : true))
+      .filter((m) =>
+        activeCategory === "all"
+          ? true
+          : (m.category?.trim() || "Uncategorised") === activeCategory,
+      );
+  }, [menu, query, activeCategory]);
 
   function add(name: string, unitPricePaise: number) {
     setCart((prev) => {
@@ -170,7 +186,32 @@ function Pos() {
         ready ? `Next bill ${next.billNumber} · token ${next.tokenNumber}` : "Loading…"
       }
     >
-      <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+      <div
+        className={`grid gap-6 ${menu.length > 0 ? "lg:grid-cols-[180px_1fr_380px]" : "lg:grid-cols-[1fr_380px]"}`}
+      >
+        {menu.length > 0 ? (
+          <aside className="no-print lg:sticky lg:top-24 h-fit">
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Categories
+            </div>
+            <div className="flex flex-wrap gap-2 lg:flex-col lg:gap-1">
+              {["all", ...categories].map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setActiveCategory(c)}
+                  className={`rounded-md px-3 py-2 text-left text-sm font-medium transition-colors ${
+                    activeCategory === c
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground"
+                  }`}
+                >
+                  {c === "all" ? "All items" : c}
+                </button>
+              ))}
+            </div>
+          </aside>
+        ) : null}
         <div>
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />

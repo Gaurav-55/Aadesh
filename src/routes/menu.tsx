@@ -22,13 +22,13 @@ import type { MenuItem, MenuItemOption } from "@/lib/types";
 export const Route = createFileRoute("/menu")({
   head: () => ({
     meta: [
-      { title: "Menu Management · Billo POS" },
+      { title: "Menu Management · Aadesh POS" },
       {
         name: "description",
         content:
-          "Add, edit and remove menu items and their size or variant options with prices in Billo café billing.",
+          "Add, edit and remove menu items and their size or variant options with prices in Aadesh café billing.",
       },
-      { property: "og:title", content: "Menu Management · Billo POS" },
+      { property: "og:title", content: "Menu Management · Aadesh POS" },
       {
         property: "og:description",
         content: "Manage your café menu items, variants and prices for fast billing.",
