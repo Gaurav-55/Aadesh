@@ -16,6 +16,8 @@ import type { Business, NumberingConfig } from "@/lib/types";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Business Settings · Aadesh POS" },
       {
         name: "description",

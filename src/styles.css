@@ -160,6 +160,10 @@
   }
 }
 
+.pos-print-area {
+  display: none;
+}
+
 /* ---- 80mm thermal receipt ---- */
 .receipt {
   width: 80mm;
@@ -178,6 +182,13 @@
 }
 
 @media print {
+  .pos-print-area {
+    display: block !important;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
   /* Chrome ignores "80mm auto" (invalid) and falls back to A4/Letter.
      An explicit 80mm x 297mm page is honoured by Save-as-PDF and by
      thermal printer drivers, which cut the roll at the content end. */

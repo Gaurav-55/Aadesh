@@ -18,6 +18,8 @@ import type { Bill } from "@/lib/types";
 export const Route = createFileRoute("/orders")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Orders History — Aadesh" },
       {
         name: "description",

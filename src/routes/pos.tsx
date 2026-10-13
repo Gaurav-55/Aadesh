@@ -1,13 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Minus, Plus, Printer, Search, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
 import { Receipt } from "@/components/Receipt";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatMoney, lineAmount, percentOf, rupeesToPaise } from "@/lib/money";
@@ -18,6 +19,8 @@ import type { Bill, BillLine, BillTaxLine } from "@/lib/types";
 export const Route = createFileRoute("/pos")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Billing — Aadesh POS" },
       {
         name: "description",
@@ -48,7 +51,8 @@ function Pos() {
   const [customerName, setCustomerName] = useState("");
   const [cashierName, setCashierName] = useState("");
   const [discount, setDiscount] = useState("");
-  const [preview, setPreview] = useState<Bill | null>(null);
+  const [printBill, setPrintBill] = useState<Bill | null>(null);
+  const printingRef = useRef(false);
 
   const cur = business.currencySymbol || "₹";
 
@@ -90,6 +94,15 @@ function Pos() {
     );
   }
 
+  function setQuantity(key: string, qty: number) {
+    if (!Number.isSafeInteger(qty) || qty < 1) return;
+    setCart((prev) => {
+      const updated = prev.map((line) => line.key === key ? { ...line, qty } : line);
+      const subtotal = updated.reduce((sum, line) => sum + lineAmount(line.qty, line.unitPricePaise), 0);
+      return Number.isSafeInteger(subtotal) ? updated : prev;
+    });
+  }
+
   const subTotalPaise = cart.reduce((s, l) => s + lineAmount(l.qty, l.unitPricePaise), 0);
   const discountPaise = Math.min(Math.max(rupeesToPaise(discount), 0), subTotalPaise);
   const taxableBase = subTotalPaise - discountPaise;
@@ -106,18 +119,14 @@ function Pos() {
 
   const next = ready ? peekNumbers(business) : { billNumber: "", tokenNumber: "" };
 
-  function openPreview() {
-    if (cart.length === 0) {
-      toast.error("Add at least one item");
-      return;
-    }
+  function buildBill(): Bill {
     const lines: BillLine[] = cart.map((l) => ({
       name: l.name,
       qty: l.qty,
       unitPricePaise: l.unitPricePaise,
       amountPaise: lineAmount(l.qty, l.unitPricePaise),
     }));
-    setPreview({
+    return {
       id: crypto.randomUUID(),
       customerName: customerName.trim(),
       createdAt: new Date().toISOString(),
@@ -132,7 +141,7 @@ function Pos() {
       taxPaise,
       grandTotalPaise,
       status: "saved",
-    });
+    };
   }
 
   /** Saves the bill first; printing never creates or loses a bill. */
@@ -153,30 +162,43 @@ function Pos() {
     setCart([]);
     setDiscount("");
     setCustomerName("");
-    setPreview(null);
-  }
-
-  function handleSave() {
-    if (!preview) return;
-    saveBill(preview, "saved");
-    toast.success(`Bill ${preview.billNumber} saved`);
-    resetSale();
+    setPrintBill(null);
   }
 
   function handlePrint() {
-    if (!preview) return;
-    // Saved first: a print failure can never lose or duplicate the bill.
-    const saved = saveBill(preview, "printed");
-    toast.success(`Bill ${saved.billNumber} saved — printing`);
-    setTimeout(() => {
-      try {
-        window.print();
-      } catch {
-        saveBill(saved, "print_failed");
-        toast.error(`Print failed for bill ${saved.billNumber} — reprint from Orders`);
-      }
+    if (!ready || cart.length === 0 || printingRef.current) return;
+    printingRef.current = true;
+    const bill = buildBill();
+    let saved: Bill;
+    try {
+      saved = saveBill(bill, "saved");
+    } catch {
+      printingRef.current = false;
+      toast.error("Could not save the bill. Free up browser storage and try again.");
+      return;
+    }
+    // Commit a receipt outside the app layout before opening native printing.
+    flushSync(() => setPrintBill(saved));
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      window.removeEventListener("afterprint", finish);
       resetSale();
-    }, 50);
+      printingRef.current = false;
+    };
+    window.addEventListener("afterprint", finish, { once: true });
+    try {
+      window.print();
+      // Browser printing cannot confirm physical success or cancellation.
+      toast.success(`Bill ${saved.billNumber} saved`);
+    } catch {
+      saveBill(saved, "print_failed");
+      toast.error(`Print failed for bill ${saved.billNumber} — reprint from Orders`);
+    } finally {
+      // Chrome blocks until its dialog closes; afterprint handles other browsers.
+      if (!window.matchMedia("print").matches) finish();
+    }
   }
 
   return (
@@ -244,7 +266,7 @@ function Pos() {
                       onClick={() => add(item.name, item.pricePaise)}
                       className="w-full rounded-md bg-secondary px-3 py-2 text-left text-sm font-medium text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     >
-                      Base · {formatMoney(item.pricePaise, cur)}
+                      {formatMoney(item.pricePaise, cur)}
                     </button>
                     {item.options.map((o) => (
                       <button
@@ -304,31 +326,15 @@ function Pos() {
                 </p>
               ) : (
                 cart.map((l) => (
-                  <div key={l.key} className="flex items-center gap-2 border-b border-border pb-2">
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-medium">{l.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {formatMoney(l.unitPricePaise, cur)} each
-                      </div>
-                    </div>
-                    <Button size="icon" variant="outline" onClick={() => bump(l.key, -1)}>
-                      <Minus className="size-3.5" />
-                    </Button>
-                    <span className="w-6 text-center text-sm tabular-nums">{l.qty}</span>
-                    <Button size="icon" variant="outline" onClick={() => bump(l.key, 1)}>
-                      <Plus className="size-3.5" />
-                    </Button>
-                    <span className="w-20 text-right text-sm tabular-nums">
-                      {formatMoney(lineAmount(l.qty, l.unitPricePaise), cur)}
-                    </span>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => setCart((p) => p.filter((x) => x.key !== l.key))}
-                    >
-                      <Trash2 className="size-3.5 text-destructive" />
-                    </Button>
-                  </div>
+                  <CheckoutLine
+                    key={l.key}
+                    line={l}
+                    currency={cur}
+                    onQuantity={(qty) => setQuantity(l.key, qty)}
+                    onMinus={() => bump(l.key, -1)}
+                    onPlus={() => setQuantity(l.key, l.qty + 1)}
+                    onDelete={() => setCart((prev) => prev.filter((line) => line.key !== l.key))}
+                  />
                 ))
               )}
             </div>
@@ -364,8 +370,8 @@ function Pos() {
             </div>
 
             <div className="flex gap-2">
-              <Button className="flex-1" onClick={openPreview} disabled={cart.length === 0}>
-                <Printer className="size-4" /> Review &amp; print
+              <Button className="flex-1" onClick={handlePrint} disabled={!ready || cart.length === 0 || !!printBill}>
+                <Printer className="size-4" /> Print Bill
               </Button>
               <Button variant="outline" onClick={resetSale} disabled={cart.length === 0}>
                 Clear
@@ -375,23 +381,59 @@ function Pos() {
         </Card>
       </div>
 
-      <Dialog open={!!preview} onOpenChange={(o) => !o && setPreview(null)}>
-        <DialogContent className="receipt-dialog max-h-[90vh] overflow-y-auto sm:max-w-[420px]">
-          <DialogHeader className="no-print">
-            <DialogTitle>Receipt preview</DialogTitle>
-          </DialogHeader>
-          {preview ? <Receipt bill={preview} business={business} /> : null}
-          <div className="no-print flex gap-2 pt-2">
-            <Button className="flex-1" onClick={handlePrint}>
-              <Printer className="size-4" /> Save &amp; print
-            </Button>
-            <Button variant="outline" onClick={handleSave}>
-              Save only
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {printBill ? createPortal(
+        <div className="pos-print-area"><Receipt bill={printBill} business={business} /></div>,
+        document.body,
+      ) : null}
     </AppShell>
+  );
+}
+
+function CheckoutLine({ line, currency, onQuantity, onMinus, onPlus, onDelete }: {
+  line: CartLine;
+  currency: string;
+  onQuantity: (qty: number) => void;
+  onMinus: () => void;
+  onPlus: () => void;
+  onDelete: () => void;
+}) {
+  const [draft, setDraft] = useState(String(line.qty));
+  useEffect(() => setDraft(String(line.qty)), [line.qty]);
+  return (
+    <div className="checkout-line min-w-0 space-y-2 border-b border-border py-3">
+      <div className="min-w-0 whitespace-normal text-sm font-medium leading-snug [overflow-wrap:anywhere]">{line.name}</div>
+      <div className="grid min-w-0 grid-cols-[2rem_3.5rem_2rem_minmax(0,1fr)_2rem] items-center gap-1.5">
+        <Button className="size-8" size="icon" variant="outline" aria-label={`Decrease ${line.name}`} title="Decrease quantity" onClick={onMinus}>
+          <Minus className="size-3.5" />
+        </Button>
+        <Input
+          aria-label={`Quantity for ${line.name}`}
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          className="h-8 min-w-0 px-1 text-center tabular-nums"
+          value={draft}
+          onChange={(event) => {
+            const value = event.target.value;
+            if (value === "") { setDraft(""); return; }
+            if (!/^\d+$/.test(value)) return;
+            const qty = Number(value);
+            if (!Number.isSafeInteger(qty) || qty < 1 || !Number.isSafeInteger(lineAmount(qty, line.unitPricePaise))) return;
+            setDraft(value);
+            onQuantity(qty);
+          }}
+          onBlur={() => setDraft(String(line.qty))}
+          onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.blur(); }}
+        />
+        <Button className="size-8" size="icon" variant="outline" aria-label={`Increase ${line.name}`} title="Increase quantity" onClick={onPlus}>
+          <Plus className="size-3.5" />
+        </Button>
+        <span className="min-w-0 text-right text-sm tabular-nums [overflow-wrap:anywhere]">{formatMoney(lineAmount(line.qty, line.unitPricePaise), currency)}</span>
+        <Button className="size-8" size="icon" variant="ghost" aria-label={`Remove ${line.name}`} title="Remove item" onClick={onDelete}>
+          <Trash2 className="size-3.5 text-destructive" />
+        </Button>
+      </div>
+    </div>
   );
 }
 
