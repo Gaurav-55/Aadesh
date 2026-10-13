@@ -195,9 +195,7 @@ function Pos() {
     } catch {
       saveBill(saved, "print_failed");
       toast.error(`Print failed for bill ${saved.billNumber} — reprint from Orders`);
-    } finally {
-      // Chrome blocks until its dialog closes; afterprint handles other browsers.
-      if (!window.matchMedia("print").matches) finish();
+      finish();
     }
   }
 
