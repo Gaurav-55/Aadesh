@@ -258,13 +258,12 @@ function Pos() {
               {results.map((item) => (
                 <Card key={item.id} className="overflow-hidden">
                   <CardContent className="space-y-2 p-4">
-                    <div className="font-medium">{item.name}</div>
                     <button
                       type="button"
                       onClick={() => add(item.name, item.pricePaise)}
-                      className="w-full rounded-md bg-secondary px-3 py-2 text-left text-sm font-medium text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                      className="w-full rounded-md bg-secondary px-3 py-3 text-left text-sm font-medium text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                     >
-                      {formatMoney(item.pricePaise, cur)}
+                      {item.name}
                     </button>
                     {item.options.map((o) => (
                       <button
@@ -273,7 +272,7 @@ function Pos() {
                         onClick={() => add(`${item.name} (${o.name})`, o.pricePaise)}
                         className="w-full rounded-md border border-border px-3 py-2 text-left text-sm transition-colors hover:bg-secondary"
                       >
-                        {o.name} · {formatMoney(o.pricePaise, cur)}
+                        {o.name}
                       </button>
                     ))}
                   </CardContent>
