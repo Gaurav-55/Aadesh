@@ -207,10 +207,10 @@ function Pos() {
       }
     >
       <div
-        className={`grid gap-6 ${menu.length > 0 ? "lg:grid-cols-[180px_1fr_380px]" : "lg:grid-cols-[1fr_380px]"}`}
+        className={`grid min-w-0 gap-6 pb-20 md:pb-0 md:grid-cols-[minmax(0,1fr)_340px] ${menu.length > 0 ? "lg:grid-cols-[180px_minmax(0,1fr)_380px]" : "lg:grid-cols-[minmax(0,1fr)_380px]"}`}
       >
         {menu.length > 0 ? (
-          <aside className="no-print lg:sticky lg:top-24 h-fit">
+          <aside className="no-print h-fit min-w-0 md:col-span-2 lg:col-span-1 lg:sticky lg:top-24">
             <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Categories
             </div>
@@ -282,7 +282,7 @@ function Pos() {
           )}
         </div>
 
-        <Card className="h-fit lg:sticky lg:top-24">
+        <Card id="bill" className="h-fit min-w-0 scroll-mt-24 md:sticky md:top-24">
           <CardContent className="space-y-4 p-5">
             <div className="grid grid-cols-2 gap-2">
               {(["dine_in", "takeaway"] as const).map((t) => (
@@ -377,6 +377,18 @@ function Pos() {
           </CardContent>
         </Card>
       </div>
+
+      {cart.length > 0 ? (
+        <a
+          href="#bill"
+          className="no-print fixed inset-x-3 bottom-3 z-30 flex items-center justify-between rounded-xl bg-primary px-4 py-3 text-primary-foreground shadow-lg md:hidden"
+        >
+          <span className="text-sm font-medium">
+            {cart.reduce((s, l) => s + l.qty, 0)} items · View bill
+          </span>
+          <span className="font-semibold tabular-nums">{formatMoney(grandTotalPaise, cur)}</span>
+        </a>
+      ) : null}
 
       {printBill ? createPortal(
         <div className="pos-print-area"><Receipt bill={printBill} business={business} /></div>,
