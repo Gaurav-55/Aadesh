@@ -23,6 +23,7 @@ export type Business = {
   taxComponents: TaxComponent[];
   billNumbering: NumberingConfig;
   tokenNumbering: NumberingConfig;
+  printerName?: string;
 };
 
 export type MenuItemOption = {

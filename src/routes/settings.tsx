@@ -281,6 +281,44 @@ function SettingsPage() {
 
       <Card className="mt-6">
         <CardHeader>
+          <CardTitle>Printer settings</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 text-sm">
+          <div className="max-w-md space-y-2">
+            <Label htmlFor="printer">Default receipt printer name</Label>
+            <Input
+              id="printer"
+              maxLength={80}
+              placeholder="e.g. TENAX TN260"
+              value={form.printerName ?? ""}
+              onChange={(e) => set("printerName", e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              Saved with your settings. Make this same printer the Windows default printer.
+            </p>
+          </div>
+          <div className="space-y-2 rounded-lg border border-border p-4">
+            <p className="font-semibold">Print without the print window (one-time setup)</p>
+            <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
+              <li>Windows Settings → Printers: set your receipt printer as <b>Default</b>, and turn off "Let Windows manage my default printer".</li>
+              <li>Right-click the desktop → New → Shortcut.</li>
+              <li>
+                Paste:{" "}
+                <code className="break-all rounded bg-muted px-1">
+                  "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk-printing --app=https://aadeshh.lovable.app/pos
+                </code>
+              </li>
+              <li>Close all Chrome windows, then open Aadesh only from this shortcut.</li>
+            </ol>
+            <p className="text-muted-foreground">
+              Now "Print Bill" prints straight to the default printer with no window.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-6">
+        <CardHeader>
           <CardTitle>Backup &amp; restore</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
