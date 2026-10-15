@@ -305,7 +305,7 @@ function SettingsPage() {
               <li>
                 Paste:{" "}
                 <code className="break-all rounded bg-muted px-1">
-                  "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk-printing --app={typeof window !== "undefined" ? window.location.origin : ""}/pos
+                  "C:\Program Files\Google\Chrome\Application\chrome.exe" --kiosk-printing --app=https://aadeshh.lovable.app/pos
                 </code>
               </li>
               <li>Close all Chrome windows, then open Aadesh only from this shortcut.</li>
