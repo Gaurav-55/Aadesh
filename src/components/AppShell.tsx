@@ -36,12 +36,12 @@ export function AppShell({
               </span>
             </span>
           </Link>
-          <nav className="ml-auto flex items-center gap-1">
+          <nav className="-mx-1 flex w-full items-center gap-1 overflow-x-auto sm:mx-0 sm:ml-auto sm:w-auto">
             {nav.map(({ to, label, icon: Icon }) => (
               <Link
                 key={to}
                 to={to}
-                className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                className="flex shrink-0 items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                 activeProps={{ className: "bg-secondary text-foreground" }}
                 activeOptions={{ exact: to === "/" }}
               >
@@ -52,9 +52,9 @@ export function AppShell({
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-5 py-8">
+      <main className="mx-auto max-w-6xl px-3 py-5 sm:px-5 sm:py-8">
         <div className="no-print mb-6">
-          <h1 className="text-3xl font-semibold">{title}</h1>
+          <h1 className="text-2xl font-semibold sm:text-3xl">{title}</h1>
           {description ? (
             <p className="mt-1 text-sm text-muted-foreground">{description}</p>
           ) : null}
