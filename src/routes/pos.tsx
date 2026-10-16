@@ -283,7 +283,7 @@ function Pos() {
         </div>
 
         <Card id="bill" className="h-fit min-w-0 scroll-mt-24 md:sticky md:top-24">
-          <CardContent className="space-y-4 p-5">
+          <CardContent className="flex flex-col gap-4 p-5 md:max-h-[calc(100vh-7rem)] [&>*]:shrink-0">
             <div className="grid grid-cols-2 gap-2">
               {(["dine_in", "takeaway"] as const).map((t) => (
                 <Button
@@ -316,7 +316,7 @@ function Pos() {
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 md:min-h-24 md:flex-1 md:!shrink md:overflow-y-auto md:pr-1">
               {cart.length === 0 ? (
                 <p className="py-6 text-center text-sm text-muted-foreground">
                   Tap items to add them to this bill.
