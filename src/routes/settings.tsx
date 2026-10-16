@@ -297,6 +297,33 @@ function SettingsPage() {
               Saved with your settings. Make this same printer the Windows default printer.
             </p>
           </div>
+          <div className="grid max-w-md gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="paper">Paper width</Label>
+              <select
+                id="paper"
+                className="h-9 w-full rounded-md border border-input bg-background px-2"
+                value={form.paperWidth ?? "80mm"}
+                onChange={(e) => set("paperWidth", e.target.value as "80mm" | "58mm")}
+              >
+                <option value="80mm">80 mm roll</option>
+                <option value="58mm">58 mm roll</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="margin">Side margin</Label>
+              <select
+                id="margin"
+                className="h-9 w-full rounded-md border border-input bg-background px-2"
+                value={form.printMargin ?? "small"}
+                onChange={(e) => set("printMargin", e.target.value as "none" | "small" | "normal")}
+              >
+                <option value="none">None</option>
+                <option value="small">Small (1 mm)</option>
+                <option value="normal">Normal (3 mm)</option>
+              </select>
+            </div>
+          </div>
           <div className="space-y-2 rounded-lg border border-border p-4">
             <p className="font-semibold">Print without the print window (one-time setup)</p>
             <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">

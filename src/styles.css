@@ -259,9 +259,10 @@
   .receipt {
     position: static !important;
     width: 100% !important;
-    max-width: 72mm !important;
+    max-width: var(--receipt-print-width, 72mm) !important;
     margin: 0 auto !important;
-    padding: 0 1mm 4mm !important;
+    padding: 0 var(--receipt-print-pad, 1mm) 4mm !important;
+    color: #000 !important;
     box-sizing: border-box !important;
     page-break-inside: avoid;
     break-inside: avoid;

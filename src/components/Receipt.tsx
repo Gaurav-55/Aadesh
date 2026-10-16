@@ -7,7 +7,16 @@ export function Receipt({ bill, business }: { bill: Bill; business: Business }) 
   const created = new Date(bill.createdAt);
 
   return (
-    <div className="receipt mx-auto shadow-sm">
+    <div
+      className="receipt mx-auto shadow-sm"
+      style={
+        {
+          "--receipt-print-width": business.paperWidth === "58mm" ? "48mm" : "72mm",
+          "--receipt-print-pad":
+            business.printMargin === "none" ? "0mm" : business.printMargin === "normal" ? "3mm" : "1mm",
+        } as React.CSSProperties
+      }
+    >
       <div className="text-center">
         <div className="text-[18px] font-bold uppercase leading-tight">{business.name}</div>
         {business.address
