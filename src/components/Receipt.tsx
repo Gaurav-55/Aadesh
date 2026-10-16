@@ -1,3 +1,4 @@
+import type React from "react";
 import { formatMoney } from "@/lib/money";
 import type { Bill, Business } from "@/lib/types";
 
