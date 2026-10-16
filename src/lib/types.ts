@@ -24,6 +24,10 @@ export type Business = {
   billNumbering: NumberingConfig;
   tokenNumbering: NumberingConfig;
   printerName?: string;
+  /** Paper roll width preset */
+  paperWidth?: "80mm" | "58mm";
+  /** Side margin preset on the printed receipt */
+  printMargin?: "none" | "small" | "normal";
 };
 
 export type MenuItemOption = {
