@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { History, Receipt, Settings, Store, UtensilsCrossed } from "lucide-react";
+import { BarChart3, History, Receipt, Settings, Store, UtensilsCrossed } from "lucide-react";
 import type { ReactNode } from "react";
 
 const nav = [
@@ -7,6 +7,7 @@ const nav = [
   { to: "/pos", label: "Billing", icon: Receipt },
   { to: "/orders", label: "Orders", icon: History },
   { to: "/menu", label: "Menu", icon: UtensilsCrossed },
+  { to: "/reports", label: "Reports", icon: BarChart3 },
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
