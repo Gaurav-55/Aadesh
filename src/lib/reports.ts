@@ -56,7 +56,7 @@ export function buildReport(bills: Bill[], from: Date, to: Date) {
 
   // Trend: daily buckets up to ~92 days, monthly beyond.
   const days = Math.round((to.getTime() - from.getTime()) / 86400000);
-  const monthly = days > 92;
+  const monthly = days > 100;
   const buckets = new Map<string, { label: string; revenue: number; orders: number }>();
   const cursor = startOfDay(from);
   if (monthly) cursor.setDate(1);
@@ -83,10 +83,12 @@ export function buildReport(bills: Bill[], from: Date, to: Date) {
   const items = new Map<string, { name: string; qty: number; revenue: number }>();
   for (const b of inRange) {
     const d = new Date(b.createdAt);
-    hours[d.getHours()].orders++;
-    hours[d.getHours()].revenue += b.grandTotalPaise;
-    weekdays[d.getDay()].orders++;
-    weekdays[d.getDay()].revenue += b.grandTotalPaise;
+    const h = hours[d.getHours()]!;
+    h.orders++;
+    h.revenue += b.grandTotalPaise;
+    const w = weekdays[d.getDay()]!;
+    w.orders++;
+    w.revenue += b.grandTotalPaise;
     for (const l of b.lines) {
       const e = items.get(l.name) ?? { name: l.name, qty: 0, revenue: 0 };
       e.qty += l.qty;

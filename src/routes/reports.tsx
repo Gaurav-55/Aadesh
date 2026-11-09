@@ -66,8 +66,8 @@ function Reports() {
   const r = useMemo(() => buildReport(bills, from, to), [bills, from, to]);
   const money = (p: number) => formatMoney(p, cur);
   const rupees = (p: number) => p / 100;
-  const busiest = r.hours.reduce((a, b) => (b.orders > a.orders ? b : a), r.hours[0]);
-  const bestDay = r.weekdays.reduce((a, b) => (b.revenue > a.revenue ? b : a), r.weekdays[0]);
+  const busiest = r.hours.reduce((a, b) => (b.orders > a.orders ? b : a));
+  const bestDay = r.weekdays.reduce((a, b) => (b.revenue > a.revenue ? b : a));
 
   function exportReport() {
     const wb = XLSX.utils.book_new();
