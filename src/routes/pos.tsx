@@ -3,6 +3,7 @@ import { Minus, Plus, Printer, Search, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { createPortal } from "react-dom";
+import { printReceipt, isDesktopApp } from "@/lib/native-print";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
@@ -188,15 +189,18 @@ function Pos() {
       printingRef.current = false;
     };
     window.addEventListener("afterprint", finish, { once: true });
-    try {
-      window.print();
-      // Browser printing cannot confirm physical success or cancellation.
-      toast.success(`Bill ${saved.billNumber} saved`);
-    } catch {
-      saveBill(saved, "print_failed");
-      toast.error(`Print failed for bill ${saved.billNumber} — reprint from Orders`);
-      finish();
-    }
+    const widthMm = business?.paperWidth === "58mm" ? 58 : 80;
+    printReceipt(widthMm)
+      .then((ok) => {
+        if (!ok) throw new Error("print failed");
+        toast.success(`Bill ${saved.billNumber} saved`);
+        if (isDesktopApp()) finish();
+      })
+      .catch(() => {
+        saveBill(saved, "print_failed");
+        toast.error(`Print failed for bill ${saved.billNumber} — reprint from Orders`);
+        finish();
+      });
   }
 
   return (

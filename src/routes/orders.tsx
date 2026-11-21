@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { printReceipt } from "@/lib/native-print";
 import { FileSpreadsheet, Printer, Search, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -71,10 +72,14 @@ function Orders() {
   function reprint(bill: Bill) {
     setOpen(bill);
     setTimeout(() => {
-      window.print();
-      setBills(
-        bills.map((b) => (b.id === bill.id ? { ...b, status: "printed" as const } : b)),
-      );
+      void printReceipt().then((ok) => {
+        setBills(
+          bills.map((b) =>
+            b.id === bill.id ? { ...b, status: ok ? ("printed" as const) : ("print_failed" as const) } : b,
+          ),
+        );
+        if (!ok) toast.error(`Print failed for bill ${bill.billNumber}`);
+      });
     }, 250);
   }
 
